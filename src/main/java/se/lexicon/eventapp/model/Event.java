@@ -20,6 +20,10 @@ public class Event {
     private String location;
     private int capacity;
 
+    /**
+     * Creates a new event and validates it: the title, the location and the capacity, and that
+     * the end time is after the start time.
+     */
     public Event(String title, String description, LocalDateTime start, LocalDateTime end,
                  String location, int capacity) {
         if (title == null || title.isBlank()) {
@@ -91,10 +95,16 @@ public class Event {
         return accepted < capacity;
     }
 
+    /**
+     * Seats left on the event right now, never below zero.
+     */
     public int availableSeats(int accepted) {
         return Math.max(0, capacity - accepted);
     }
 
+    /**
+     * True when the end time has passed. An event that has ended cannot get new invitations.
+     */
     public boolean hasEnded() {
         return end.isBefore(LocalDateTime.now());
     }
