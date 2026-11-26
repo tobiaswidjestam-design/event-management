@@ -22,12 +22,19 @@ public class EventService {
         this.invitationRepository = invitationRepository;
     }
 
+    /**
+     * Creates an event and stores it. The Event constructor does the validation, so an event
+     * that breaks a rule never reaches the database.
+     */
     public Event createEvent(String title, String description, LocalDateTime start, LocalDateTime end,
                              String location, int capacity) {
         Event event = new Event(title, description, start, end, location, capacity);
         return eventRepository.save(event);
     }
 
+    /**
+     * All events that are stored, in the order the repository returns them.
+     */
     public List<Event> findAll() {
         return eventRepository.findAll();
     }
@@ -41,6 +48,9 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Loads one event, or throws NotFoundException when the id does not exist.
+     */
     public Event findById(int id) {
         return eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("No event with id " + id));
