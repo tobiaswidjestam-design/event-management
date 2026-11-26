@@ -68,16 +68,27 @@ public class Invitation {
         return status == InvitationStatus.PENDING;
     }
 
+    /**
+     * Moves the invitation to ACCEPTED. Only a PENDING invitation can be answered, which is what
+     * stops an invitation from being answered twice.
+     */
     public void accept() {
         requirePending("accepted");
         this.status = InvitationStatus.ACCEPTED;
     }
 
+    /**
+     * Moves the invitation to DECLINED. Only a PENDING invitation can be answered.
+     */
     public void decline() {
         requirePending("declined");
         this.status = InvitationStatus.DECLINED;
     }
 
+    /**
+     * Guard shared by {@link #accept()} and {@link #decline()}: an invitation that already has
+     * an answer cannot change it.
+     */
     private void requirePending(String action) {
         if (status != InvitationStatus.PENDING) {
             throw new ValidationException(
