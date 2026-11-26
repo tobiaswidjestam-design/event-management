@@ -1,0 +1,60 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam ArrowColor #33526B
+skinparam classBorderColor #33526B
+skinparam classBackgroundColor #FEFEFE
+
+title Domain model
+
+class Participant {
+  - id : int
+  - name : String
+  - email : String
+  - type : ParticipantType
+  - organization : String
+  + isOrganization() : boolean
+}
+
+class Event {
+  - id : int
+  - title : String
+  - description : String
+  - start : LocalDateTime
+  - end : LocalDateTime
+  - location : String
+  - capacity : int
+  + hasFreeSeat(accepted : int) : boolean
+  + availableSeats(accepted : int) : int
+  + hasEnded() : boolean
+}
+
+class Invitation {
+  - id : int
+  - status : InvitationStatus
+  - invitedAt : LocalDateTime
+  + accept() : void
+  + decline() : void
+  + isAccepted() : boolean
+  + isPending() : boolean
+}
+
+enum ParticipantType {
+  INDIVIDUAL
+  ORGANIZATION
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+Invitation "1" --> "1" Event : for
+Invitation "1" --> "1" Participant : invited
+Participant --> ParticipantType
+Invitation --> InvitationStatus
+
+@enduml

@@ -119,42 +119,28 @@ ui (ConsoleMenu)  ->  service (EventService, ParticipantService, InvitationServi
 
 ## UML class diagram
 
+### Domain model
+
+![Domain model](docs/uml-domain-model.png)
+
+`Invitation` has one `Event` and one `Participant`. The database enforces this with two foreign keys and a unique
+constraint on `(event_id, participant_id)`, so rule R2 holds even outside the application. The two enums keep the
+states explicit: an invitation can only be PENDING, ACCEPTED or DECLINED, and only through `accept()`/`decline()`.
+
+### Layers
+
+![Architecture](docs/uml-architecture.png)
+
+The services depend on the repository interfaces, never on the JDBC classes, which is why `InvitationService` can
+be tested with in-memory repositories. `AppException` is the base class for the five expected error types, so the
+console menu can catch one type and keep running.
+
+The diagram sources are PlantUML files in `docs/` (`uml-domain-model.puml`, `uml-architecture.puml`).
+Regenerate the PNG files with:
+
+```bash
+java -jar plantuml.jar -tpng docs/*.puml
 ```
-              <<interface>>  Repository<T>
-              + findAll(): List<T>
-              + findById(int): Optional<T>
-              + save(T): T
-              + delete(int): boolean
-                       ^
-     +-----------------+------------------+
-     |                 |                  |
- JdbcParticipant-  JdbcEvent-      JdbcInvitation-
- Repository        Repository      Repository
-
- <<enum>> ParticipantType          <<enum>> InvitationStatus
-   INDIVIDUAL | ORGANIZATION         PENDING | ACCEPTED | DECLINED
-
- Participant                         Invitation
- - id: int                           - id: int
- - name: String                      - event: Event
- - email: String                     - participant: Participant
- - type: ParticipantType             - status: InvitationStatus
- - organization: String              - invitedAt: LocalDateTime
- + isOrganization(): boolean         + accept(): void
-                                     + decline(): void
- Event                               + isAccepted(): boolean
- - id: int
- - title: String                 EventService        : createEvent, upcomingEvents, availableSeats
- - description: String           ParticipantService  : register, findAll, findById
- - start, end: LocalDateTime     InvitationService   : invite, accept, decline, attendeesFor, eventsForParticipant
- - location: String              ConsoleMenu         : menu loop and input handling
- - capacity: int                 DatabaseInitializer : creates the schema on startup
- + hasFreeSeat(int accepted): boolean
- + hasEnded(): boolean
-```
-
-Relationships: `Invitation` has one `Event` and one `Participant`. The database enforces this with two foreign
-keys and a unique constraint on `(event_id, participant_id)`, so rule R2 holds even outside the application.
 
 ## Database tables
 

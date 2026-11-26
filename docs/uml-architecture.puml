@@ -1,0 +1,87 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam nodesep 30
+skinparam ranksep 40
+skinparam ArrowColor #33526B
+skinparam classBorderColor #33526B
+skinparam classBackgroundColor #FEFEFE
+skinparam packageBorderColor #8A9BA8
+skinparam packageStyle rectangle
+hide empty members
+
+title Architecture
+
+package "ui" {
+  class ConsoleMenu {
+    + run() : void
+  }
+}
+
+package "service" {
+  class ParticipantService
+  class EventService
+  class InvitationService
+}
+
+package "repository" {
+  interface Repository<T> {
+    + save(entity : T) : T
+    + findById(id : int) : Optional<T>
+    + findAll() : List<T>
+    + delete(id : int) : boolean
+  }
+  interface ParticipantRepository
+  interface EventRepository
+  interface InvitationRepository
+  class JdbcParticipantRepository
+  class JdbcEventRepository
+  class JdbcInvitationRepository
+}
+
+package "db" {
+  class ConnectionFactory {
+    + getConnection() : Connection
+  }
+  class DatabaseInitializer {
+    + initialize() : void
+  }
+}
+
+package "exception" {
+  class AppException
+  class ValidationException
+  class NotFoundException
+  class DuplicateInvitationException
+  class OverbookedException
+  class DatabaseException
+}
+
+ConsoleMenu ..> ParticipantService
+ConsoleMenu ..> EventService
+ConsoleMenu ..> InvitationService
+
+ParticipantService ..> ParticipantRepository
+EventService ..> EventRepository
+InvitationService ..> InvitationRepository
+
+Repository <|.. ParticipantRepository
+Repository <|.. EventRepository
+Repository <|.. InvitationRepository
+
+ParticipantRepository <|.. JdbcParticipantRepository
+EventRepository <|.. JdbcEventRepository
+InvitationRepository <|.. JdbcInvitationRepository
+
+JdbcParticipantRepository ..> ConnectionFactory
+JdbcEventRepository ..> ConnectionFactory
+JdbcInvitationRepository ..> ConnectionFactory
+DatabaseInitializer ..> ConnectionFactory
+
+AppException <|-- ValidationException
+AppException <|-- NotFoundException
+AppException <|-- DuplicateInvitationException
+AppException <|-- OverbookedException
+AppException <|-- DatabaseException
+
+@enduml
