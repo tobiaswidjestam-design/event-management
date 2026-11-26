@@ -78,6 +78,10 @@ public class InvitationService {
         invitationRepository.updateStatus(invitation.getId(), InvitationStatus.ACCEPTED);
     }
 
+    /**
+     * Declines a pending invitation. No capacity check is needed here, because declining can
+     * only free a seat, never take one.
+     */
     public synchronized void decline(int invitationId) {
         Invitation invitation = getInvitation(invitationId);
         invitation.decline();
@@ -117,6 +121,9 @@ public class InvitationService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Loads one invitation, or throws NotFoundException when the id does not exist.
+     */
     public Invitation getInvitation(int invitationId) {
         return invitationRepository.findById(invitationId)
                 .orElseThrow(() -> new NotFoundException("No invitation with id " + invitationId));
