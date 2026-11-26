@@ -1,5 +1,6 @@
 package se.lexicon.eventapp.service;
 
+import java.util.Comparator;
 import java.util.List;
 import se.lexicon.eventapp.exception.NotFoundException;
 import se.lexicon.eventapp.exception.ValidationException;
@@ -37,10 +38,12 @@ public class ParticipantService {
     }
 
     /**
-     * All participants that are registered, in the order the repository returns them.
+     * All participants that are registered, sorted by name.
      */
     public List<Participant> findAll() {
-        return participantRepository.findAll();
+        return participantRepository.findAll().stream()
+                .sorted(Comparator.comparing(Participant::getName))
+                .toList();
     }
 
     /**
