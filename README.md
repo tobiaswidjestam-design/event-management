@@ -84,6 +84,7 @@ They use in-memory fakes for the repositories, so no database is needed to run t
 7. List events for a participant
 8. Show attendance list (accepted only)
 9. Show available seats for an event
+10. List all participants (sorted by name)
 0. Exit
 ```
 
@@ -152,8 +153,8 @@ java -jar plantuml.jar -tpng docs/*.puml
 
 ## Git workflow
 
-The project was built with small commits, one per feature area, and one feature branch (`feature/invitations`)
-that was merged back into `main`:
+The project was built with small commits, one per feature area, and two feature branches (`feature/invitations`
+and `practice/list-participants`) that were merged back into `main`:
 
 ```
 chore: initialize Maven project and package structure
@@ -164,3 +165,6 @@ feat(service): enforce invitation and capacity rules
 feat(ui): add console menu and application entry point
 test: add JUnit tests for invitation rules
 ```
+
+Javadoc was added afterwards in separate `docs(model)`, `docs(service)` and `docs(ui)` commits, one class per commit.
+The `practice/list-participants` branch added menu option 10 and sorting by name in `ParticipantService.findAll()`.
