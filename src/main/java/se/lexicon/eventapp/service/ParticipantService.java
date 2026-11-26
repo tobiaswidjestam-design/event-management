@@ -36,10 +36,16 @@ public class ParticipantService {
         return participantRepository.save(participant);
     }
 
+    /**
+     * All participants that are registered, in the order the repository returns them.
+     */
     public List<Participant> findAll() {
         return participantRepository.findAll();
     }
 
+    /**
+     * Loads one participant, or throws NotFoundException when the id does not exist.
+     */
     public Participant findById(int id) {
         return participantRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("No participant with id " + id));
