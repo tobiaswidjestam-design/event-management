@@ -73,10 +73,11 @@ public class ConsoleMenu {
             case "7" -> listEventsForParticipant();
             case "8" -> showAttendance();
             case "9" -> showAvailableSeats();
+            case "10" -> listParticipants();
             case "0" -> {
                 return false;
             }
-            default -> System.out.println("Error: choose a number between 0 and 9");
+            default -> System.out.println("Error: choose a number between 0 and 10");
         }
         return true;
     }
@@ -92,6 +93,7 @@ public class ConsoleMenu {
         System.out.println("7. List events for a participant");
         System.out.println("8. Show attendance list (accepted only)");
         System.out.println("9. Show available seats for an event");
+        System.out.println("10. List all participants (sorted by name)");
         System.out.println("0. Exit");
     }
 
