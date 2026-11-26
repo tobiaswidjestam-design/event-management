@@ -14,6 +14,10 @@ public class Participant {
     private ParticipantType type;
     private String organization;
 
+    /**
+     * Creates a new participant and validates the input. The organization name is kept only
+     * for ORGANIZATION participants, and is required for them.
+     */
     public Participant(String name, String email, ParticipantType type, String organization) {
         if (name == null || name.isBlank()) {
             throw new ValidationException("Participant name is required");
@@ -62,6 +66,9 @@ public class Participant {
         return organization;
     }
 
+    /**
+     * True for a company or organization, used when the participant is printed in the console.
+     */
     public boolean isOrganization() {
         return type == ParticipantType.ORGANIZATION;
     }
